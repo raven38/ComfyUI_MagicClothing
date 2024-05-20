@@ -163,7 +163,7 @@ class AnimatediffGenerate:
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID
                 
                 ip_model = IPAdapterFaceID(full_net.pipe, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), ip_ckpt, device, True)
-                frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['num_images_per_prompt'], kwargs['negative_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'])
+                frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['negative_prompt'], kwargs['num_images_per_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'])
             else:
                 if kwargs['faceid_version'] == "FaceIDPlus":
                     ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid-plus_sd15_lora.safetensors")
@@ -180,7 +180,7 @@ class AnimatediffGenerate:
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceIDPlus as IPAdapterFaceID
 
                 ip_model = IPAdapterFaceID(full_net.pipe, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), image_encoder_path, ip_ckpt, device, True)
-                frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['num_images_per_prompt'], kwargs['negative_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'], shortcut=v2)
+                frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['negative_prompt'], kwargs['num_images_per_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'], shortcut=v2)
         else:
             frames, cloth_mask_image = full_net.generate(cloth_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['num_images_per_prompt'], kwargs['negative_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'])
 
