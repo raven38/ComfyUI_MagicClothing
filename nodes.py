@@ -125,6 +125,8 @@ class AnimatediffGenerate:
                 "sample_steps": ("INT", {"default": 20, "min": 1, "max": 100, "step": 1}),
                 "height": ("INT", {"default": 768, "min": 256, "max": 1024, "step": 1}),
                 "width": ("INT", {"default": 576, "min": 192, "max": 768, "step": 1}),
+                "faceid_version": (faceid_version,),
+                "face_image": ("IMAGE", ),
             },
         }
 
@@ -148,7 +150,39 @@ class AnimatediffGenerate:
         full_net = ClothAdapter_AnimateDiff(pipe, kwargs['pipe_path'], garment_extractor_path, garment_ip_layer_path, device)
         cloth_mask_image=None
         a_prompt = 'best quality, high quality'
-        frames, cloth_mask_image = full_net.generate(cloth_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['num_images_per_prompt'], kwargs['negative_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'])
+        face_image = kwargs['face_image']
+        if face_image is not None:
+            face_image = torch.squeeze(face_image, 0)
+            face_image = (face_image.numpy() * 255).astype(np.uint8)
+            face_image = Image.fromarray(face_image)
+            if kwargs['faceid_version'] == "FaceID":
+                ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid_sd15_lora.safetensors")
+                ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid_sd15.bin")
+                pipe.load_lora_weights(ip_lora)
+                pipe.fuse_lora()
+                from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID
+                
+                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), ip_ckpt, device, True)
+                frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['num_images_per_prompt'], kwargs['negative_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'])
+            else:
+                if kwargs['faceid_version'] == "FaceIDPlus":
+                    ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid-plus_sd15_lora.safetensors")
+                    ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid-plus_sd15.bin")
+                    v2 = False
+                else:
+                    ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid-plusv2_sd15_lora.safetensors")
+                    ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid-plusv2_sd15.bin")
+                    v2 = True
+
+                pipe.load_lora_weights(ip_lora)
+                pipe.fuse_lora()
+                image_encoder_path = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
+                from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceIDPlus as IPAdapterFaceID
+
+                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), image_encoder_path, ip_ckpt, device, True)
+                frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['num_images_per_prompt'], kwargs['negative_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'], shortcut=v2)
+        else:
+            frames, cloth_mask_image = full_net.generate(cloth_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['num_images_per_prompt'], kwargs['negative_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'])
 
         images = np.array(frames).astype(np.float32) / 255.0
         images = torch.squeeze(torch.from_numpy(images), 0)
