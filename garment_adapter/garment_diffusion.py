@@ -179,6 +179,7 @@ class ClothAdapter_AnimateDiff:
         self.attn_store = {}
 
         ip_layers = torch.nn.ModuleList(self.pipe.unet.attn_processors.values())
+        print('animatediff', ip_layers)
         ip_layers_stores = torch.nn.ModuleList([])
         for i in range(len(ip_layers)):
             if isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
