@@ -847,7 +847,7 @@ class IPAdapterFaceID_AnimateDiff:
                 ip_animatediff_layers_stores.append(ip_layers[i])
                 ip_animatediff_layers_stores.append(torch.nn.Identity())
             elif isinstance(ip_layers[i], (REFAttnProcessor, IPAttnProcessor)):
-                ip_animatediff_layers_stores.append(torch.nn.Identity())
+                ip_layers_stores.append(torch.nn.Identity())
                 ip_layers_stores.append(ip_layers[i])
         ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
         print(ip_animatediff_layers_stores)
@@ -1147,7 +1147,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                 ip_animatediff_layers_stores.append(ip_layers[i])
                 ip_animatediff_layers_stores.append(torch.nn.Identity())
             elif isinstance(ip_layers[i], (REFAttnProcessor, IPAttnProcessor)):
-                ip_animatediff_layers_stores.append(torch.nn.Identity())
+                ip_layers_stores.append(torch.nn.Identity())
                 ip_layers_stores.append(ip_layers[i])
         print('ipadapterfaceid', ip_layers_stores)
         print('state_dict', state_dict["ip_adapter"].keys())
