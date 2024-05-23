@@ -1145,8 +1145,8 @@ class IPAdapterFaceIDPlus_AnimateDiff:
             else:
                 ip_layers_stores.append(ip_layers[i])
                 ip_layers_stores.append(torch.nn.Identity())
-        print('ipadapterfaceid', ip_layers_stores)
-        print('state_dict', state_dict["ip_adapter"])
+        print('ipadapterfaceid', ip_layers_stores.keys())
+        print('state_dict', state_dict["ip_adapter"].keys())
         ip_layers_stores.load_state_dict(state_dict["ip_adapter"]) # , strict=False)
         # print(torch.load(self.self_ip_path, map_location="cpu").keys(), flush=True)
         ip_animatediff_layers_stores.load_state_dict(torch.load(self.self_ip_path, map_location="cpu"))
