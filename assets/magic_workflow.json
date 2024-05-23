@@ -1,48 +1,7 @@
 {
-  "last_node_id": 6,
-  "last_link_id": 6,
+  "last_node_id": 7,
+  "last_link_id": 7,
   "nodes": [
-    {
-      "id": 3,
-      "type": "LoadImage",
-      "pos": [
-        -641,
-        796
-      ],
-      "size": {
-        "0": 315,
-        "1": 314
-      },
-      "flags": {},
-      "order": 0,
-      "mode": 0,
-      "outputs": [
-        {
-          "name": "IMAGE",
-          "type": "IMAGE",
-          "links": [
-            5
-          ],
-          "shape": 3,
-          "label": "IMAGE",
-          "slot_index": 0
-        },
-        {
-          "name": "MASK",
-          "type": "MASK",
-          "links": null,
-          "shape": 3,
-          "label": "MASK"
-        }
-      ],
-      "properties": {
-        "Node name for S&R": "LoadImage"
-      },
-      "widgets_values": [
-        "00055_00 (2).jpg",
-        "image"
-      ]
-    },
     {
       "id": 4,
       "type": "VHS_VideoCombine",
@@ -55,7 +14,7 @@
         625.3333333333333
       ],
       "flags": {},
-      "order": 2,
+      "order": 3,
       "mode": 0,
       "inputs": [
         {
@@ -118,10 +77,10 @@
       ],
       "size": {
         "0": 484.82330322265625,
-        "1": 384.1004943847656
+        "1": 390
       },
       "flags": {},
-      "order": 1,
+      "order": 2,
       "mode": 0,
       "inputs": [
         {
@@ -129,6 +88,12 @@
           "type": "IMAGE",
           "link": 5,
           "label": "cloth_image"
+        },
+        {
+          "name": "face_image",
+          "type": "IMAGE",
+          "link": 7,
+          "slot_index": 1
         }
       ],
       "outputs": [
@@ -152,13 +117,93 @@
         "guoyww/animatediff-motion-adapter-v1-5-2",
         1,
         "bare, monochrome, lowres, bad anatomy, worst quality, low quality",
-        581,
+        444,
         "randomize",
         2.5,
         3,
         20,
         768,
-        576
+        576,
+        "FaceID"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "LoadImage",
+      "pos": [
+        -876,
+        1080
+      ],
+      "size": [
+        315,
+        313.9999542236328
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            7
+          ],
+          "shape": 3
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "Cristy Ren3.jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "LoadImage",
+      "pos": [
+        -767,
+        594
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            5
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "label": "MASK"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "t2.jpg",
+        "image"
       ]
     }
   ],
@@ -178,10 +223,26 @@
       4,
       0,
       "IMAGE"
+    ],
+    [
+      7,
+      7,
+      0,
+      6,
+      1,
+      "IMAGE"
     ]
   ],
   "groups": [],
   "config": {},
-  "extra": {},
+  "extra": {
+    "ds": {
+      "scale": 1.2100000000000009,
+      "offset": {
+        "0": 1179.0877685546875,
+        "1": -332.3526916503906
+      }
+    }
+  },
   "version": 0.4
 }

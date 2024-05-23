@@ -176,6 +176,7 @@
       "widgets_values": [
         "a dress photography of a standing model",
         "OMS_1024_VTHD+DressCode_200000.safetensors",
+        "SG161222/Realistic_Vision_V4.0_noVAE",
         true,
         4,
         "bare, monochrome, lowres, bad anatomy, worst quality, low quality",

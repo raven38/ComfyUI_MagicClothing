@@ -156,6 +156,7 @@
       "widgets_values": [
         "a photography of a model",
         "magic_clothing_768_vitonhd_joint.safetensors",
+        "SG161222/Realistic_Vision_V4.0_noVAE",
         true,
         1,
         "bare, monochrome, lowres, bad anatomy, worst quality, low quality",
