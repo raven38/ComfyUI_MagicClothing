@@ -180,10 +180,13 @@ class AnimatediffGenerate:
 
                 pipe.load_lora_weights(ip_lora)
                 pipe.fuse_lora()
+                pipe2.load_lora_weights(ip_lora)
+                pipe2.fuse_lora()
+                ref_unet = pipe2.unet
                 image_encoder_path = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceIDPlus_AnimateDiff as IPAdapterFaceID_AnimateDiff
 
-                ip_model = IPAdapterFaceID_AnimateDiff(pipe, kwargs['pipe_path'], folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), image_encoder_path, ip_ckpt, garment_extractor_path, garment_ip_layer_path, device, True)
+                ip_model = IPAdapterFaceID_AnimateDiff(pipe, ref_unet, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), image_encoder_path, ip_ckpt, garment_extractor_path, garment_ip_layer_path, device, True)
                 frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['negative_prompt'], kwargs['num_images_per_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'], kwargs['scale'], kwargs['s_scale'], shortcut=v2)
         else:
             full_net = ClothAdapter_AnimateDiff(pipe, kwargs['pipe_path'], garment_extractor_path, garment_ip_layer_path, device)
