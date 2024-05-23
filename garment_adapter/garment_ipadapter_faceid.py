@@ -788,7 +788,7 @@ class IPAdapterFaceID_AnimateDiff:
             if "attn1" in name and "motion_modules" not in name:
                 attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
                 print('processor', name)
-            elif "motion_modules" in name:
+            elif "attn1" in name and "motion_modules" in name:
                 attn_procs[name] = AttnProcessor()
             elif cross_attention_dim is None:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
@@ -1089,7 +1089,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                 hidden_size = unet.config.block_out_channels[block_id]
             if "attn1" in name and "motion_modules" not in name:
                 attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
-            elif "motion_modules" in name:
+            elif "attn1" in name and "motion_modules" in name:
                 attn_procs[name] = AttnProcessor()
             elif cross_attention_dim is None:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
