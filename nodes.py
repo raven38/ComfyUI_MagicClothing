@@ -162,7 +162,7 @@ class AnimatediffGenerate:
                 pipe.load_lora_weights(ip_lora)
                 pipe.fuse_lora()
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID_AnimateDiff
-                ref_unet = UNet2DConditionModel.from_pretrained(pipe_path, subfolder='unet', torch_dtype=pipe.dtype)
+                ref_unet = UNet2DConditionModel.from_pretrained(kwargs['pipe_path'], subfolder='unet', torch_dtype=pipe.dtype)
                 ref_unet.load_lora_weights(ip_lora)
                 ref_unet.fuse_lora()
                 ip_model = IPAdapterFaceID_AnimateDiff(pipe, ref_unet, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), ip_ckpt, garment_extractor_path, garment_ip_layer_path, device, True)
