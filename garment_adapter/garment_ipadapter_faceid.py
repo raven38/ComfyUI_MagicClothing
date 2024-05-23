@@ -711,7 +711,7 @@ class IPAdapterFaceID_AnimateDiff:
         # ref_unet = copy.deepcopy(sd_pipe.unet)
         # ref_unet = UNet2DConditionModel.from_pretrained(pipe_path, subfolder='unet', torch_dtype=sd_pipe.dtype)
         state_dict = {}
-        with safe_open(ref_path, framework="pt", device="cpu") as f:
+        with safe_open(ref_path2, framework="pt", device="cpu") as f:
             for key in f.keys():
                 state_dict[key] = f.get_tensor(key)
         ref_unet.load_state_dict(state_dict, strict=False)
@@ -1085,9 +1085,11 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                 block_id = int(name[len("down_blocks.")])
                 hidden_size = unet.config.block_out_channels[block_id]
             if "attn1" in name and "motion_modules" not in name:
-                attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
+                ...
+                # attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
             elif "motion_modules" in name:
-                attn_procs[name] = AttnProcessor()
+                ...
+                # attn_procs[name] = AttnProcessor()
             elif cross_attention_dim is None:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
             else:
@@ -1111,15 +1113,15 @@ class IPAdapterFaceIDPlus_AnimateDiff:
         self.image_proj_model.load_state_dict(state_dict["image_proj"])
         ip_layers = torch.nn.ModuleList(unet.attn_processors.values())
         print('ipadapterfaceid', ip_layers)
-        # ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
-        ip_layers_stores = torch.nn.ModuleList([])
-        ip_animatediff_layers_stores = torch.nn.ModuleList([])
-        for i in range(len(ip_layers)):
-            if not isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
-                ip_layers_stores.append(ip_layers[i])
-                ip_layers_stores.append(torch.nn.Identity())            
-        ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
-        ip_layers_stores.to(self.device)
+        ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
+        # ip_layers_stores = torch.nn.ModuleList([])
+        # ip_animatediff_layers_stores = torch.nn.ModuleList([])
+        # for i in range(len(ip_layers)):
+        #     if not isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
+        #         ip_layers_stores.append(ip_layers[i])
+        #         ip_layers_stores.append(torch.nn.Identity())            
+        # ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
+        # ip_layers_stores.to(self.device)
 
 
     def load_ip_adapter(self):
@@ -1148,9 +1150,9 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                 ip_layers_stores.append(torch.nn.Identity())            
         ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
         print(torch.load(self.self_ip_path, map_location="cpu").keys(), flush=True)
-        ip_animatediff_layers_stores.load_state_dict(torch.load(self.self_ip_path, map_location="cpu"))
+        # ip_animatediff_layers_stores.load_state_dict(torch.load(self.self_ip_path, map_location="cpu"))
         ip_layers_stores.to(self.device)
-        ip_animatediff_layers_stores.to(self.device)
+        # ip_animatediff_layers_stores.to(self.device)
 
     @torch.inference_mode()
     def get_image_embeds(self, faceid_embeds, face_image, s_scale, shortcut):
