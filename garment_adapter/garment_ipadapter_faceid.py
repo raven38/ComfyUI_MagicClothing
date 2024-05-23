@@ -1017,8 +1017,8 @@ class IPAdapterFaceIDPlus_AnimateDiff:
         ref_unet.load_state_dict(state_dict, strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
-        # self.set_ip_adapter2(self.ref_unet)
-        # self.load_ip_adapter2(self.ref_unet)
+        self.set_ip_adapter2(self.ref_unet)
+        self.load_ip_adapter2(self.ref_unet)
         self.set_ref_adapter()
         if set_seg_model:
             self.set_seg_model()
@@ -1085,7 +1085,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                 hidden_size = unet.config.block_out_channels[block_id]
             if "attn1" in name and "motion_modules" not in name:
                 attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
-            elif "attn1" in name and "motion_modules" in name:
+            elif "motion_modules" in name:
                 attn_procs[name] = AttnProcessor()
             elif cross_attention_dim is None:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
