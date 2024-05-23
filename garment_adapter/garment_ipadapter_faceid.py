@@ -915,6 +915,7 @@ class IPAdapterFaceID_AnimateDiff:
             self.ref_unet(torch.cat([cloth_embeds] * num_samples), 0, prompt_embeds_null, cross_attention_kwargs={"attn_store": self.attn_store})
 
         generator = torch.Generator(self.device).manual_seed(seed) if seed is not None else None
+        print('ipadapter', self.attn_store)
         images = self.pipe(
             prompt_embeds=prompt_embeds,
             negative_prompt_embeds=negative_prompt_embeds,
