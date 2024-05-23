@@ -710,6 +710,7 @@ class IPAdapterFaceID_AnimateDiff:
 
         # ref_unet = copy.deepcopy(sd_pipe.unet)
         ref_unet = UNet2DConditionModel.from_pretrained(pipe_path, subfolder='unet', torch_dtype=sd_pipe.dtype)
+        self.set_ip_adapter2(ref_unet)
         state_dict = {}
         with safe_open(ref_path2, framework="pt", device="cpu") as f:
             for key in f.keys():
@@ -746,6 +747,26 @@ class IPAdapterFaceID_AnimateDiff:
             else:
                 attn_procs[name] = AttnProcessor()
         self.ref_unet.set_attn_processor(attn_procs)
+
+    def set_ip_adapter2(self, unet):
+        attn_procs = {}
+        for name in unet.attn_processors.keys():
+            cross_attention_dim = None if name.endswith("attn1.processor") else unet.config.cross_attention_dim
+            if name.startswith("mid_block"):
+                hidden_size = unet.config.block_out_channels[-1]
+            elif name.startswith("up_blocks"):
+                block_id = int(name[len("up_blocks.")])
+                hidden_size = list(reversed(unet.config.block_out_channels))[block_id]
+            elif name.startswith("down_blocks"):
+                block_id = int(name[len("down_blocks.")])
+                hidden_size = unet.config.block_out_channels[block_id]
+            if cross_attention_dim is None:
+                attn_procs[name] = REFAttnProcessor(name=name, type="write")
+            else:
+                attn_procs[name] = IPAttnProcessor(
+                    hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens,
+                ).to(self.device, dtype=self.torch_dtype)
+        unet.set_attn_processor(attn_procs)
 
     def set_ip_adapter(self):
         unet = self.pipe.unet
@@ -961,7 +982,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
 
         # ref_unet = copy.deepcopy(sd_pipe.unet)
         ref_unet = UNet2DConditionModel.from_pretrained(pipe_path, subfolder='unet', torch_dtype=sd_pipe.dtype)
-
+        self.set_ip_adapter2(ref_unet)
         state_dict = {}
         with safe_open(ref_path, framework="pt", device="cpu") as f:
             for key in f.keys():
@@ -999,6 +1020,27 @@ class IPAdapterFaceIDPlus_AnimateDiff:
             else:
                 attn_procs[name] = AttnProcessor()
         self.ref_unet.set_attn_processor(attn_procs)
+
+    def set_ip_adapter2(self):
+        unet = self.pipe.unet
+        attn_procs = {}
+        for name in unet.attn_processors.keys():
+            cross_attention_dim = None if name.endswith("attn1.processor") else unet.config.cross_attention_dim
+            if name.startswith("mid_block"):
+                hidden_size = unet.config.block_out_channels[-1]
+            elif name.startswith("up_blocks"):
+                block_id = int(name[len("up_blocks.")])
+                hidden_size = list(reversed(unet.config.block_out_channels))[block_id]
+            elif name.startswith("down_blocks"):
+                block_id = int(name[len("down_blocks.")])
+                hidden_size = unet.config.block_out_channels[block_id]
+            if cross_attention_dim is None:
+                attn_procs[name] = REFAttnProcessor(name=name, type="write")
+            else:
+                attn_procs[name] = IPAttnProcessor(
+                    hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens,
+                ).to(self.device, dtype=self.torch_dtype)
+        unet.set_attn_processor(attn_procs)
 
     def set_ip_adapter(self):
         unet = self.pipe.unet
