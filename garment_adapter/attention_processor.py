@@ -281,7 +281,7 @@ class REFAttnProcessor2_0(nn.Module):
             do_classifier_free_guidance=False,
             enable_cloth_guidance=True
     ) -> torch.FloatTensor:
-        print('attn', attn_store)
+        print('attn', attn_store, self.name, self.type)
         if self.type == "read":
             attn_store[self.name] = hidden_states
         elif self.type == "write":
