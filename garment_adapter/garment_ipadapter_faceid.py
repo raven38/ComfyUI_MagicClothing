@@ -784,16 +784,16 @@ class IPAdapterFaceID_AnimateDiff:
         print('ipadapterfaceid', ip_layers)
         # ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
         ip_layers_stores = torch.nn.ModuleList([])
-        ip_animatediff_layers = torch.nn.ModuleList([])
+        ip_animatediff_layers_stores = torch.nn.ModuleList([])
         for i in range(len(ip_layers)):
             if isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
-                ip_animatediff_layers.append(ip_layers[i])
-                ip_animatediff_layers.append(torch.nn.Identity())
+                ip_animatediff_layers_stores.append(ip_layers[i])
+                ip_animatediff_layers_stores.append(torch.nn.Identity())
             else:
                 ip_layers_stores.append(ip_layers[i])
                 ip_layers_stores.append(torch.nn.Identity())            
         ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
-        ip_layers_stores.load_state_dict(torch.load(self.self_ip_path, map_location="cpu"))
+        ip_animatediff_layers_stores.load_state_dict(torch.load(self.self_ip_path, map_location="cpu"))
         # ip_layers_stores.to(self.device)
 
     def set_ori_adapter(self, unet):
