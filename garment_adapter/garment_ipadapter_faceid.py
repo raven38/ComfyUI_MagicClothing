@@ -839,7 +839,7 @@ class IPAdapterFaceID_AnimateDiff:
         self.image_proj_model.load_state_dict(state_dict["image_proj"])
         ip_layers = torch.nn.ModuleList(self.pipe.unet.attn_processors.values())
         print('ipadapterfaceid', ip_layers)
-        ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
+        # ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
         ip_layers_stores = torch.nn.ModuleList([])
         ip_animatediff_layers_stores = torch.nn.ModuleList([])
         for i in range(len(ip_layers)):
@@ -1139,7 +1139,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
         self.image_proj_model.load_state_dict(state_dict["image_proj"])
         ip_layers = torch.nn.ModuleList(self.pipe.unet.attn_processors.values())
         print('ipadapterfaceid', ip_layers)
-        ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
+        # ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
         ip_layers_stores = torch.nn.ModuleList([])
         ip_animatediff_layers_stores = torch.nn.ModuleList([])
         for i in range(len(ip_layers)):
