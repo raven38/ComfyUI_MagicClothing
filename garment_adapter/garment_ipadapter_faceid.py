@@ -1023,8 +1023,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                 attn_procs[name] = AttnProcessor()
         self.ref_unet.set_attn_processor(attn_procs)
 
-    def set_ip_adapter2(self):
-        unet = self.pipe.unet
+    def set_ip_adapter2(self, unet):
         attn_procs = {}
         for name in unet.attn_processors.keys():
             cross_attention_dim = None if name.endswith("attn1.processor") else unet.config.cross_attention_dim
