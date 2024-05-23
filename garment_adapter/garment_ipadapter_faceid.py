@@ -717,8 +717,8 @@ class IPAdapterFaceID_AnimateDiff:
         ref_unet.load_state_dict(state_dict, strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
-        self.set_ip_adapter2(self.ref_unet)
-        self.load_ip_adapter2(self.ref_unet)
+        # self.set_ip_adapter2(self.ref_unet)
+        # self.load_ip_adapter2(self.ref_unet)
         self.set_ref_adapter()
         if set_seg_model:
             self.set_seg_model()
@@ -1018,8 +1018,8 @@ class IPAdapterFaceIDPlus_AnimateDiff:
         ref_unet.load_state_dict(state_dict, strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
-        self.set_ip_adapter2(self.ref_unet)
-        self.load_ip_adapter2(self.ref_unet)
+        # self.set_ip_adapter2(self.ref_unet)
+        # self.load_ip_adapter2(self.ref_unet)
         self.set_ref_adapter()
         if set_seg_model:
             self.set_seg_model()
