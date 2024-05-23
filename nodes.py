@@ -145,7 +145,7 @@ class AnimatediffGenerate:
         vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse").to(dtype=torch.float16)
         adapter = MotionAdapter.from_pretrained(kwargs['motion_adapter_path'], torch_dtype=torch.float16)
         pipe = OmsAnimateDiffusionPipeline.from_pretrained(kwargs['pipe_path'], vae=vae, motion_adapter=adapter, torch_dtype=torch.float16)
-        pipe2 = OmsDiffusionPipeline.from_pretrained(pipe_path, vae=vae, torch_dtype=torch.float16)
+        pipe2 = OmsDiffusionPipeline.from_pretrained(kwargs['pipe_path'], vae=vae, torch_dtype=torch.float16)
         scheduler = DDIMScheduler.from_pretrained(kwargs['pipe_path'], subfolder="scheduler", clip_sample=False, timestep_spacing="linspace", beta_schedule="linear", steps_offset=1,)
         pipe.scheduler = scheduler
         garment_extractor_path = folder_paths.get_full_path("magic_cloth_checkpoint", "stable_ckpt/garment_extractor.safetensors")
