@@ -431,7 +431,7 @@ class IPAdapterFaceIDPlus:
         ip_layers = torch.nn.ModuleList(self.pipe.unet.attn_processors.values())
         print('ipadapterfaceid', ip_layers)
         print('state_dict', state_dict["ip_adapter"].keys())
-        ip_layers.load_state_dict(state_dict["ip_adapter"], strict=True) # False)
+        # ip_layers.load_state_dict(state_dict["ip_adapter"], strict=True) # False)
 
     @torch.inference_mode()
     def get_image_embeds(self, faceid_embeds, face_image, s_scale, shortcut):
