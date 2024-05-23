@@ -4,7 +4,7 @@ import torch
 import os
 import numpy as np
 from PIL import Image
-from diffusers import UniPCMultistepScheduler, AutoencoderKL, MotionAdapter, DDIMScheduler, ControlNetModel
+from diffusers import UniPCMultistepScheduler, AutoencoderKL, MotionAdapter, DDIMScheduler, ControlNetModel, UNet2DConditionModel
 from diffusers.pipelines import StableDiffusionPipeline
 
 from .garment_adapter.garment_diffusion import ClothAdapter, ClothAdapter_AnimateDiff
@@ -162,8 +162,10 @@ class AnimatediffGenerate:
                 pipe.load_lora_weights(ip_lora)
                 pipe.fuse_lora()
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID_AnimateDiff
-                
-                ip_model = IPAdapterFaceID_AnimateDiff(pipe, kwargs['pipe_path'], folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), ip_ckpt, garment_extractor_path, garment_ip_layer_path, device, True)
+                ref_unet = UNet2DConditionModel.from_pretrained(pipe_path, subfolder='unet', torch_dtype=pipe.dtype)
+                ref_unet.load_lora_weights(ip_lora)
+                ref_unet.fuse_lora()
+                ip_model = IPAdapterFaceID_AnimateDiff(pipe, ref_unet, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), ip_ckpt, garment_extractor_path, garment_ip_layer_path, device, True)
                 frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['negative_prompt'], kwargs['num_images_per_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'], kwargs['scale'])
             else:
                 if kwargs['faceid_version'] == "FaceIDPlus":
