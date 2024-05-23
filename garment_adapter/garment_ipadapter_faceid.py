@@ -719,8 +719,8 @@ class IPAdapterFaceID_AnimateDiff:
         ref_unet.load_state_dict(state_dict, strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
-        # self.set_ip_adapter2(self.ref_unet)
-        # self.load_ip_adapter2(self.ref_unet)
+        self.set_ip_adapter2(self.ref_unet)
+        self.load_ip_adapter2(self.ref_unet)
         self.set_ref_adapter()
         if set_seg_model:
             self.set_seg_model()
@@ -814,15 +814,15 @@ class IPAdapterFaceID_AnimateDiff:
         self.image_proj_model.load_state_dict(state_dict["image_proj"])
         ip_layers = torch.nn.ModuleList(unet.attn_processors.values())
         print('ipadapterfaceid', ip_layers)
-        # ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
-        ip_layers_stores = torch.nn.ModuleList([])
-        ip_animatediff_layers_stores = torch.nn.ModuleList([])
-        for i in range(len(ip_layers)):
-            if not isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
-                ip_layers_stores.append(ip_layers[i])
-                ip_layers_stores.append(torch.nn.Identity())            
-        ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
-        ip_layers_stores.to(self.device)
+        ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
+        # ip_layers_stores = torch.nn.ModuleList([])
+        # ip_animatediff_layers_stores = torch.nn.ModuleList([])
+        # for i in range(len(ip_layers)):
+        #     if not isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
+        #         ip_layers_stores.append(ip_layers[i])
+        #         ip_layers_stores.append(torch.nn.Identity())            
+        # ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
+        # ip_layers_stores.to(self.device)
 
 
     def load_ip_adapter(self):
