@@ -963,6 +963,8 @@ class IPAdapterFaceIDPlus_AnimateDiff:
         self.ip_ckpt = ip_ckpt
         self.num_tokens = num_tokens
         self.torch_dtype = torch_dtype
+        self.self_ip_path = self_ip_path
+
 
         self.pipe = sd_pipe.to(self.device)
         # self.set_ori_adapter(self.pipe.unet)
