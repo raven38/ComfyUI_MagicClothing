@@ -384,6 +384,7 @@ class REFAnimateDiffAttnProcessor2_0(nn.Module):
             attn_store=None,
             do_classifier_free_guidance=False,
     ) -> torch.FloatTensor:
+        print('animate attn', self.name)
         ref_hidden_states = attn_store[self.name]
         if do_classifier_free_guidance:
             empty_copy = torch.zeros_like(ref_hidden_states)
