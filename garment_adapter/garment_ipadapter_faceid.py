@@ -690,7 +690,7 @@ class IPAdapterFaceIDPlusXL(IPAdapterFaceIDPlus):
 
 
 class IPAdapterFaceID_AnimateDiff:
-    def __init__(self, sd_pipe, ref_unet, ref_path, ip_ckpt, ref_path2, self_ip_path, device, enable_cloth_guidance, num_tokens=4, n_cond=1, torch_dtype=torch.float16, set_seg_model=True):
+    def __init__(self, sd_pipe, pipe_path, ref_path, ip_ckpt, ref_path2, self_ip_path, device, enable_cloth_guidance, num_tokens=4, n_cond=1, torch_dtype=torch.float16, set_seg_model=True):
         self.enable_cloth_guidance = enable_cloth_guidance
         self.device = device
         self.ip_ckpt = ip_ckpt
@@ -711,7 +711,7 @@ class IPAdapterFaceID_AnimateDiff:
         self.set_insightface()
 
         # ref_unet = copy.deepcopy(sd_pipe.unet)
-        # ref_unet = UNet2DConditionModel.from_pretrained(pipe_path, subfolder='unet', torch_dtype=sd_pipe.dtype)
+        ref_unet = UNet2DConditionModel.from_pretrained(pipe_path, subfolder='unet', torch_dtype=sd_pipe.dtype)
         state_dict = {}
         with safe_open(ref_path2, framework="pt", device="cpu") as f:
             for key in f.keys():
@@ -788,7 +788,7 @@ class IPAdapterFaceID_AnimateDiff:
             if "attn1" in name and "motion_modules" not in name:
                 attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
                 print('processor', name)
-            elif "attn1" in name and "motion_modules" in name:
+            elif "motion_modules" in name:
                 attn_procs[name] = AttnProcessor()
             elif cross_attention_dim is None:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
@@ -986,7 +986,7 @@ class IPAdapterFaceID_AnimateDiff:
 
 
 class IPAdapterFaceIDPlus_AnimateDiff:
-    def __init__(self, sd_pipe, ref_unet, ref_path, image_encoder_path, ip_ckpt, ref_path2, self_ip_path, device, enable_cloth_guidance, num_tokens=4, torch_dtype=torch.float16, set_seg_model=True):
+    def __init__(self, sd_pipe, pipe_path, ref_path, image_encoder_path, ip_ckpt, ref_path2, self_ip_path, device, enable_cloth_guidance, num_tokens=4, torch_dtype=torch.float16, set_seg_model=True):
         self.enable_cloth_guidance = enable_cloth_guidance
         self.device = device
         self.image_encoder_path = image_encoder_path
@@ -1013,6 +1013,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
         self.set_insightface()
 
         # ref_unet = copy.deepcopy(sd_pipe.unet)
+        ref_unet = UNet2DConditionModel.from_pretrained(pipe_path, subfolder='unet', torch_dtype=sd_pipe.dtype)
         state_dict = {}
         with safe_open(ref_path2, framework="pt", device="cpu") as f:
             for key in f.keys():
@@ -1089,7 +1090,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                 hidden_size = unet.config.block_out_channels[block_id]
             if "attn1" in name and "motion_modules" not in name:
                 attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
-            elif "attn1" in name and "motion_modules" in name:
+            elif "motion_modules" in name:
                 attn_procs[name] = AttnProcessor()
             elif cross_attention_dim is None:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
