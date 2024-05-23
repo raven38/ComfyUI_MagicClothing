@@ -713,14 +713,14 @@ class IPAdapterFaceID_AnimateDiff:
         # ref_unet = copy.deepcopy(sd_pipe.unet)
         # ref_unet = UNet2DConditionModel.from_pretrained(pipe_path, subfolder='unet', torch_dtype=sd_pipe.dtype)
         state_dict = {}
-        with safe_open(ref_path2, framework="pt", device="cpu") as f:
+        with safe_open(ref_path, framework="pt", device="cpu") as f:
             for key in f.keys():
                 state_dict[key] = f.get_tensor(key)
         ref_unet.load_state_dict(state_dict, strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
-        # self.set_ip_adapter2(self.ref_unet)
-        # self.load_ip_adapter2(self.ref_unet)
+        self.set_ip_adapter2(self.ref_unet)
+        self.load_ip_adapter2(self.ref_unet)
         self.set_ref_adapter()
         if set_seg_model:
             self.set_seg_model()
@@ -1014,7 +1014,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
 
         # ref_unet = copy.deepcopy(sd_pipe.unet)
         state_dict = {}
-        with safe_open(ref_path2, framework="pt", device="cpu") as f:
+        with safe_open(ref_path, framework="pt", device="cpu") as f:
             for key in f.keys():
                 state_dict[key] = f.get_tensor(key)
         ref_unet.load_state_dict(state_dict, strict=False)
