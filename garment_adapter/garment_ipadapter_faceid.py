@@ -792,6 +792,7 @@ class IPAdapterFaceID_AnimateDiff:
                 attn_procs[name] = AttnProcessor()
             elif cross_attention_dim is None:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
+                print('REFAttnProcessor', name)
             else:
                 attn_procs[name] = IPAttnProcessor(
                     hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens * self.n_cond,
@@ -1065,6 +1066,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                 hidden_size = unet.config.block_out_channels[block_id]
             if cross_attention_dim is None:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
+                print('REFAttnProcessor', name)
             else:
                 attn_procs[name] = IPAttnProcessor(
                     hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens,
