@@ -145,6 +145,7 @@ class AnimatediffGenerate:
         vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse").to(dtype=torch.float16)
         adapter = MotionAdapter.from_pretrained(kwargs['motion_adapter_path'], torch_dtype=torch.float16)
         pipe = OmsAnimateDiffusionPipeline.from_pretrained(kwargs['pipe_path'], vae=vae, motion_adapter=adapter, torch_dtype=torch.float16)
+        pipe2 = OmsDiffusionPipeline.from_pretrained(pipe_path, vae=vae, torch_dtype=torch.float16)
         scheduler = DDIMScheduler.from_pretrained(kwargs['pipe_path'], subfolder="scheduler", clip_sample=False, timestep_spacing="linspace", beta_schedule="linear", steps_offset=1,)
         pipe.scheduler = scheduler
         garment_extractor_path = folder_paths.get_full_path("magic_cloth_checkpoint", "stable_ckpt/garment_extractor.safetensors")
@@ -161,10 +162,10 @@ class AnimatediffGenerate:
                 ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid_sd15.bin")
                 pipe.load_lora_weights(ip_lora)
                 pipe.fuse_lora()
+                pipe2.load_lora_weights(ip_lora)
+                pipe2.fuse_lora()
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID_AnimateDiff
-                ref_unet = UNet2DConditionModel.from_pretrained(kwargs['pipe_path'], subfolder='unet', torch_dtype=pipe.dtype)
-                ref_unet.load_lora_weights(ip_lora)
-                ref_unet.fuse_lora()
+                ref_unet = pipe2.unet
                 ip_model = IPAdapterFaceID_AnimateDiff(pipe, ref_unet, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), ip_ckpt, garment_extractor_path, garment_ip_layer_path, device, True)
                 frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['negative_prompt'], kwargs['num_images_per_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'], kwargs['scale'])
             else:
