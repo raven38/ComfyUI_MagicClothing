@@ -718,6 +718,7 @@ class IPAdapterFaceID_AnimateDiff:
 
         self.ref_unet = ref_unet.to(self.device)
         self.set_ip_adapter2(ref_unet)
+        self.load_ip_adapter2(ref_unet)
         self.set_ref_adapter()
         if set_seg_model:
             self.set_seg_model()
@@ -794,6 +795,32 @@ class IPAdapterFaceID_AnimateDiff:
                     hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens * self.n_cond,
                 ).to(self.device, dtype=self.torch_dtype)
         unet.set_attn_processor(attn_procs)
+
+
+    def load_ip_adapter2(self, unet):
+        if os.path.splitext(self.ip_ckpt)[-1] == ".safetensors":
+            state_dict = {"image_proj": {}, "ip_adapter": {}}
+            with safe_open(self.ip_ckpt, framework="pt", device="cpu") as f:
+                for key in f.keys():
+                    if key.startswith("image_proj."):
+                        state_dict["image_proj"][key.replace("image_proj.", "")] = f.get_tensor(key)
+                    elif key.startswith("ip_adapter."):
+                        state_dict["ip_adapter"][key.replace("ip_adapter.", "")] = f.get_tensor(key)
+        else:
+            state_dict = torch.load(self.ip_ckpt, map_location="cpu")
+        self.image_proj_model.load_state_dict(state_dict["image_proj"])
+        ip_layers = torch.nn.ModuleList(unet.attn_processors.values())
+        print('ipadapterfaceid', ip_layers)
+        # ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
+        ip_layers_stores = torch.nn.ModuleList([])
+        ip_animatediff_layers_stores = torch.nn.ModuleList([])
+        for i in range(len(ip_layers)):
+            if not isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
+                ip_layers_stores.append(ip_layers[i])
+                ip_layers_stores.append(torch.nn.Identity())            
+        ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
+        ip_layers_stores.to(self.device)
+
 
     def load_ip_adapter(self):
         if os.path.splitext(self.ip_ckpt)[-1] == ".safetensors":
@@ -992,6 +1019,7 @@ class IPAdapterFaceIDPlus_AnimateDiff:
 
         self.ref_unet = ref_unet.to(self.device)
         self.set_ip_adapter2(ref_unet)
+        self.load_ip_adapter2(ref_unet)
         self.set_ref_adapter()
         if set_seg_model:
             self.set_seg_model()
@@ -1067,6 +1095,32 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                     hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens,
                 ).to(self.device, dtype=self.torch_dtype)
         unet.set_attn_processor(attn_procs)
+
+
+    def load_ip_adapter2(self, unet):
+        if os.path.splitext(self.ip_ckpt)[-1] == ".safetensors":
+            state_dict = {"image_proj": {}, "ip_adapter": {}}
+            with safe_open(self.ip_ckpt, framework="pt", device="cpu") as f:
+                for key in f.keys():
+                    if key.startswith("image_proj."):
+                        state_dict["image_proj"][key.replace("image_proj.", "")] = f.get_tensor(key)
+                    elif key.startswith("ip_adapter."):
+                        state_dict["ip_adapter"][key.replace("ip_adapter.", "")] = f.get_tensor(key)
+        else:
+            state_dict = torch.load(self.ip_ckpt, map_location="cpu")
+        self.image_proj_model.load_state_dict(state_dict["image_proj"])
+        ip_layers = torch.nn.ModuleList(unet.attn_processors.values())
+        print('ipadapterfaceid', ip_layers)
+        # ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
+        ip_layers_stores = torch.nn.ModuleList([])
+        ip_animatediff_layers_stores = torch.nn.ModuleList([])
+        for i in range(len(ip_layers)):
+            if not isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
+                ip_layers_stores.append(ip_layers[i])
+                ip_layers_stores.append(torch.nn.Identity())            
+        ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
+        ip_layers_stores.to(self.device)
+
 
     def load_ip_adapter(self):
         if os.path.splitext(self.ip_ckpt)[-1] == ".safetensors":
