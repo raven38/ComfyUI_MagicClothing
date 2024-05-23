@@ -164,7 +164,7 @@ class AnimatediffGenerate:
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID_AnimateDiff
                 
                 ip_model = IPAdapterFaceID_AnimateDiff(pipe, kwargs['pipe_path'], folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), ip_ckpt, garment_extractor_path, garment_ip_layer_path, device, True)
-                frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['negative_prompt'], kwargs['num_images_per_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'], kwargs['scale'], kwargs['s_scale'])
+                frames, cloth_mask_image = ip_model.generate(cloth_image, face_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['negative_prompt'], kwargs['num_images_per_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'], kwargs['scale'])
             else:
                 if kwargs['faceid_version'] == "FaceIDPlus":
                     ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid-plus_sd15_lora.safetensors")
