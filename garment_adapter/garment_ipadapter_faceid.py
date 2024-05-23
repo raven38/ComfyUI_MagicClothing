@@ -783,17 +783,17 @@ class IPAdapterFaceID_AnimateDiff:
                 block_id = int(name[len("down_blocks.")])
                 hidden_size = unet.config.block_out_channels[block_id]
             print('all process', name, cross_attention_dim)
-            if "attn1" in name and "motion_modules" not in name:
-                attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
-                print('processor', name)
-            else: # if "motion_modules" in name:
-                attn_procs[name] = AttnProcessor()
-            # elif cross_attention_dim is None:
-            #     attn_procs[name] = REFAttnProcessor(name=name, type="write")
-            # else:
-            #     attn_procs[name] = IPAttnProcessor(
-            #         hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens * self.n_cond,
-            #     ).to(self.device, dtype=self.torch_dtype)
+            # if "attn1" in name and "motion_modules" not in name:
+            #     attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
+            #     print('processor', name)
+            # else # if "motion_modules" in name:
+            #     attn_procs[name] = AttnProcessor()
+            if cross_attention_dim is None:
+                attn_procs[name] = REFAttnProcessor(name=name, type="write")
+            else:
+                attn_procs[name] = IPAttnProcessor(
+                    hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens * self.n_cond,
+                ).to(self.device, dtype=self.torch_dtype)
         unet.set_attn_processor(attn_procs)
 
 
