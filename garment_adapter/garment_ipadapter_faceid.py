@@ -213,14 +213,14 @@ class IPAdapterFaceID:
         self.image_proj_model.load_state_dict(state_dict["image_proj"])
         ip_layers = torch.nn.ModuleList(self.pipe.unet.attn_processors.values())
         print('ipadapterfaceid', ip_layers)
-        # ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
-        ip_layers_stores = torch.nn.ModuleList([])
+        ip_layers.load_state_dict(state_dict["ip_adapter"], strict=True) # False)
+        # ip_layers_stores = torch.nn.ModuleList([])
         print('state_dict', state_dict["ip_adapter"].keys())
-        for i in range(len(ip_layers)):
-            if not isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
-                ip_layers_stores.append(ip_layers[i])
-                ip_layers_stores.append(torch.nn.Identity())
-        ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
+        # for i in range(len(ip_layers)):
+        #     if not isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
+        #         ip_layers_stores.append(ip_layers[i])
+        #         ip_layers_stores.append(torch.nn.Identity())
+        # ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
         # ip_layers_stores.to(self.device)
 
     @torch.inference_mode()
@@ -431,7 +431,7 @@ class IPAdapterFaceIDPlus:
         ip_layers = torch.nn.ModuleList(self.pipe.unet.attn_processors.values())
         print('ipadapterfaceid', ip_layers)
         print('state_dict', state_dict["ip_adapter"].keys())
-        ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
+        ip_layers.load_state_dict(state_dict["ip_adapter"], strict=True) # False)
 
     @torch.inference_mode()
     def get_image_embeds(self, faceid_embeds, face_image, s_scale, shortcut):
