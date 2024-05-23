@@ -762,6 +762,7 @@ class IPAdapterFaceID_AnimateDiff:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
             elif "attn1" in name and "motion_modules" not in name:
                 attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
+                print('processor', name)
             else:
                 attn_procs[name] = IPAttnProcessor(
                     hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens * self.n_cond,
