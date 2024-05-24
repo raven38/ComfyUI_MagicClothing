@@ -852,9 +852,9 @@ class IPAdapterFaceID_AnimateDiff:
         ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
         print('animate', ip_animatediff_layers_stores)
         print('state_dict', torch.load(self.self_ip_path, map_location="cpu").keys(), flush=True)
-        ip_animatediff_layers_stores.load_state_dict(torch.load(self.self_ip_path, map_location="cpu"))
+        # ip_animatediff_layers_stores.load_state_dict(torch.load(self.self_ip_path, map_location="cpu"))
         ip_layers_stores.to(self.device)
-        ip_animatediff_layers_stores.to(self.device)
+        # ip_animatediff_layers_stores.to(self.device)
 
     def set_ori_adapter(self, unet):
         attn_procs = {}
@@ -1155,9 +1155,9 @@ class IPAdapterFaceIDPlus_AnimateDiff:
         print('animatediff', ip_animatediff_layers_stores)
         print('animatediff state_dict', torch.load(self.self_ip_path, map_location="cpu").keys(), flush=True)
         ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
-        ip_animatediff_layers_stores.load_state_dict(torch.load(self.self_ip_path, map_location="cpu"))
+        # ip_animatediff_layers_stores.load_state_dict(torch.load(self.self_ip_path, map_location="cpu"))
         ip_layers_stores.to(self.device)
-        ip_animatediff_layers_stores.to(self.device)
+        # ip_animatediff_layers_stores.to(self.device)
 
     @torch.inference_mode()
     def get_image_embeds(self, faceid_embeds, face_image, s_scale, shortcut):
