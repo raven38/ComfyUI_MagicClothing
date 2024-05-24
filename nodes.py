@@ -132,8 +132,8 @@ class AnimatediffGenerate:
             },
         }
 
-    RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("images",)
+    RETURN_TYPES = ("IMAGE", "IMAGE")
+    RETURN_NAMES = ("images", "cloth_mask_image")
     OUTPUT_NODE = True
     CATEGORY = "MagicClothing"
     FUNCTION = "animatediff_generation"
@@ -194,7 +194,9 @@ class AnimatediffGenerate:
 
         images = np.array(frames).astype(np.float32) / 255.0
         images = torch.squeeze(torch.from_numpy(images), 0)
-        return (images,)
+        cloth_mask_image = np.array(cloth_mask_image).astype(np.float32) / 255.0
+        cloth_mask_image = torch.unsqueeze(torch.from_numpy(cloth_mask_image), 0)
+        return (images, cloth_mask_image)
         
     
 class GarmentGenerate:
