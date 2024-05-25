@@ -142,11 +142,8 @@ class IPAdapterFaceID:
         state_dict = {}
         with safe_open(ref_path, framework="pt", device="cpu") as f:
             for key in f.keys():
-                # print(key)
                 state_dict[key] = f.get_tensor(key)
-        # print('ref unet', ref_unet)
-        print('load ref_unet')
-        print(ref_unet.load_state_dict(state_dict , strict=False))
+        ref_unet.load_state_dict(state_dict , strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
         self.set_ref_adapter()
@@ -194,8 +191,6 @@ class IPAdapterFaceID:
                 hidden_size = unet.config.block_out_channels[block_id]
             if cross_attention_dim is None:
                 attn_procs[name] = REFAttnProcessor(name=name, type="write")
-            elif "attn1" in name and "motion_modules" not in name:
-                attn_procs[name] = REFAnimateDiffAttnProcessor(hidden_size=hidden_size, cross_attention_dim=hidden_size,name=name)
             else:
                 attn_procs[name] = IPAttnProcessor(
                     hidden_size=hidden_size, cross_attention_dim=cross_attention_dim, scale=1.0, num_tokens=self.num_tokens * self.n_cond,
@@ -215,16 +210,7 @@ class IPAdapterFaceID:
             state_dict = torch.load(self.ip_ckpt, map_location="cpu")
         self.image_proj_model.load_state_dict(state_dict["image_proj"])
         ip_layers = torch.nn.ModuleList(self.pipe.unet.attn_processors.values())
-        print('ipadapterfaceid', ip_layers)
         ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
-        # ip_layers_stores = torch.nn.ModuleList([])
-        print('state_dict', state_dict["ip_adapter"].keys())
-        # for i in range(len(ip_layers)):
-        #     if not isinstance(ip_layers[i], REFAnimateDiffAttnProcessor):
-        #         ip_layers_stores.append(ip_layers[i])
-        #         ip_layers_stores.append(torch.nn.Identity())
-        # ip_layers_stores.load_state_dict(state_dict["ip_adapter"], strict=False)
-        # ip_layers_stores.to(self.device)
 
     @torch.inference_mode()
     def get_image_embeds(self, faceid_embeds):
@@ -365,8 +351,7 @@ class IPAdapterFaceIDPlus:
         with safe_open(ref_path, framework="pt", device="cpu") as f:
             for key in f.keys():
                 state_dict[key] = f.get_tensor(key)
-        print('load ref_unet')
-        print(ref_unet.load_state_dict(state_dict , strict=False))
+        ref_unet.load_state_dict(state_dict , strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
         self.set_ref_adapter()
@@ -434,8 +419,6 @@ class IPAdapterFaceIDPlus:
             state_dict = torch.load(self.ip_ckpt, map_location="cpu")
         self.image_proj_model.load_state_dict(state_dict["image_proj"])
         ip_layers = torch.nn.ModuleList(self.pipe.unet.attn_processors.values())
-        print('ipadapterfaceid', ip_layers)
-        print('state_dict', state_dict["ip_adapter"].keys())
         ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
 
     @torch.inference_mode()
