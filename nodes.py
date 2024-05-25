@@ -162,8 +162,8 @@ class AnimatediffGenerate:
                 ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid_sd15.bin")
                 pipe.load_lora_weights(ip_lora)
                 pipe.fuse_lora()
-                # pipe2.load_lora_weights(ip_lora)
-                # pipe2.fuse_lora()
+                pipe2.load_lora_weights(ip_lora)
+                pipe2.fuse_lora()
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID_AnimateDiff
                 ref_unet = pipe2.unet
                 ip_model = IPAdapterFaceID_AnimateDiff(pipe, ref_unet, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), ip_ckpt, garment_extractor_path, garment_ip_layer_path, device, True)
@@ -180,8 +180,8 @@ class AnimatediffGenerate:
 
                 pipe.load_lora_weights(ip_lora)
                 pipe.fuse_lora()
-                # pipe2.load_lora_weights(ip_lora)
-                # pipe2.fuse_lora()
+                pipe2.load_lora_weights(ip_lora)
+                pipe2.fuse_lora()
                 ref_unet = pipe2.unet
                 image_encoder_path = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceIDPlus_AnimateDiff as IPAdapterFaceID_AnimateDiff
