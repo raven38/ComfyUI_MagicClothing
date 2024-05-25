@@ -143,6 +143,7 @@ class IPAdapterFaceID:
         with safe_open(ref_path, framework="pt", device="cpu") as f:
             for key in f.keys():
                 state_dict[key] = f.get_tensor(key)
+        print('loadded weigts', set(ref_unet.state_dict().keys()) & set(state_dict.keys()))
         ref_unet.load_state_dict(state_dict , strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
@@ -351,6 +352,7 @@ class IPAdapterFaceIDPlus:
         with safe_open(ref_path, framework="pt", device="cpu") as f:
             for key in f.keys():
                 state_dict[key] = f.get_tensor(key)
+        print('loadded weigts', set(ref_unet.state_dict().keys()) & set(state_dict.keys()))
         ref_unet.load_state_dict(state_dict , strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
@@ -708,7 +710,8 @@ class IPAdapterFaceID_AnimateDiff:
                 state_dict[key] = f.get_tensor(key)
         # print('ref unet', ref_unet)
         print('load ref_unet')
-        print(ref_unet.load_state_dict(state_dict , strict=False))
+        print('loadded weigts', set(ref_unet.state_dict().keys()) & set(state_dict.keys()))
+        ref_unet.load_state_dict(state_dict , strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
         # self.set_ip_adapter2(self.ref_unet)
@@ -1014,7 +1017,8 @@ class IPAdapterFaceIDPlus_AnimateDiff:
                 state_dict[key] = f.get_tensor(key)
         # print('ref unet', ref_unet)
         print('load ref_unet')
-        print(ref_unet.load_state_dict(state_dict , strict=False))
+        print('loadded weigts', set(ref_unet.state_dict().keys()) & set(state_dict.keys()))
+        ref_unet.load_state_dict(state_dict , strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
         # self.set_ip_adapter2(self.ref_unet)
