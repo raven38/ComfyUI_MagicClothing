@@ -170,7 +170,7 @@ class ClothAdapter_AnimateDiff:
         with safe_open(ref_path, framework="pt", device="cpu") as f:
             for key in f.keys():
                 state_dict[key] = f.get_tensor(key)
-        ref_unet.load_state_dict(state_dict, strict=False)
+        # ref_unet.load_state_dict(state_dict, strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
         self.set_ref_adapter(self.ref_unet)
