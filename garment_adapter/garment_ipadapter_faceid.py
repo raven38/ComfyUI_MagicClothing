@@ -142,7 +142,9 @@ class IPAdapterFaceID:
         state_dict = {}
         with safe_open(ref_path, framework="pt", device="cpu") as f:
             for key in f.keys():
+                print(key)
                 state_dict[key] = f.get_tensor(key)
+        print('ref unet', ref_unet)
         ref_unet.load_state_dict(state_dict, strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
@@ -1020,7 +1022,9 @@ class IPAdapterFaceIDPlus_AnimateDiff:
         state_dict = {}
         with safe_open(ref_path2, framework="pt", device="cpu") as f:
             for key in f.keys():
+                print(key)
                 state_dict[key] = f.get_tensor(key)
+        print('ref unet', ref_unet)
         ref_unet.load_state_dict(state_dict, strict=False)
 
         self.ref_unet = ref_unet.to(self.device)
